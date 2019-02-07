@@ -160,7 +160,9 @@ Jennifer Huang - [Github](https://github.com/jhuang10123) / [Twitter](https://tw
 Second part of Airbnb: Joann Vuong
 
 Third part of AirBnB:
+
 Leo Byeon [GitHub](https://github.com/leobyeon)
+
 Brent Janski [GitHub](https://github.com/talktobrent)
 
 ## License
