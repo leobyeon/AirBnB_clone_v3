@@ -101,10 +101,11 @@ class TestFileStorage(unittest.TestCase):
     def test_count(self):
         """ test the count method """
         storage = models.storage
+        before = storage.count()
         tx = State(name="Texas")
         storage.new(tx)
         storage.save()
-        count = storage.count()
-        self.assertNotEqual(count, 0)
+        after = storage.count()
+        self.assertEqual(before + 1, after)
         count = storage.count("FakeName")
         self.assertEqual(count, 0)
