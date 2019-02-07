@@ -4,7 +4,6 @@
 from api.v1.views import app_views
 from flask import jsonify, abort, request
 from models import storage
-from models.place import Place
 from models.review import Review
 
 
@@ -12,8 +11,6 @@ from models.review import Review
                         'GET', 'POST'])
 def all_place_reviews(place_id=None):
     """ retrieves all Place Reviews """
-
-    places_list = storage.all("Place").values()
 
     try:
         place = storage.all("Place").pop("Place." + place_id)
@@ -25,9 +22,8 @@ def all_place_reviews(place_id=None):
         return (jsonify(my_place_reviews))
 
     if request.method == "POST":
-        try:
-            data = request.get_json(silent=True)
-        except:
+        data = request.get_json(silent=True)
+        if not data:
             return (jsonify({"error": "Not a JSON"}), 400)
 
         users = [user.id for user in storage.all("User").values()]
@@ -39,6 +35,7 @@ def all_place_reviews(place_id=None):
         if data.get("user_id") not in users:
             abort(404)
         review = Review(**data)
+        review.place_id = place_id
         review.save()
         return (jsonify(review.to_dict()), 201)
 
@@ -47,8 +44,6 @@ def all_place_reviews(place_id=None):
                     'GET', 'DELETE', 'PUT'])
 def a_review(review_id):
     """ retrieves all Places """
-
-    reviews_list = storage.all("Review").values()
 
     try:
         review = storage.all("Review").pop("Review." + review_id)
@@ -71,7 +66,7 @@ def a_review(review_id):
         for k, v in data.items():
             if k not in [
                     'id', 'user_id', 'created_at', 'updated_at', 'place_id']:
-                setattr(place, k, v)
+                setattr(review, k, v)
         storage.new(review)
         storage.save()
         return (jsonify(review.to_dict()), 200)
